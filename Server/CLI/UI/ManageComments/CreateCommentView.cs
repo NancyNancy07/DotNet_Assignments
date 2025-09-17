@@ -12,4 +12,11 @@ public class CreateCommentView
     {
         this.commentRepository = commentRepository;
     }
+
+     public async Task ShowAsync()
+    {
+        Console.WriteLine("comment added");
+        await Task.CompletedTask;
+    }
+
 }

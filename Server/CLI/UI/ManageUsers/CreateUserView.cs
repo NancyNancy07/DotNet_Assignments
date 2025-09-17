@@ -12,4 +12,12 @@ public class CreateUserView
     {
         this.userRepository = userRepository;
     }
+
+    
+    public async Task ShowAsync()
+    {
+        Console.WriteLine("user created");
+        await Task.CompletedTask;
+    }
+
 }

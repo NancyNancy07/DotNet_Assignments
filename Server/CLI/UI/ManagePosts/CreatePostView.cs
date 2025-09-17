@@ -12,4 +12,11 @@ public class CreatePostView
         this.postRepository = postRepository;
     }
 
+    public async Task ShowAsync()
+    {
+        Console.WriteLine("post created");
+        await Task.CompletedTask;
+
+    }
+
 }

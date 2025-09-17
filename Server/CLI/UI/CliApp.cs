@@ -1,18 +1,35 @@
+using CLI.UI.ManageUsers;
+using CLI.UI.ManageComments;
+using CLI.UI.ManagePosts;
 using RepositoryContracts;
 
 namespace CLI.UI;
 
 public class CliApp
 {
-    private readonly IUserRepository userRepository;
-    private readonly IPostRepository postRepository;
-    private readonly ICommentRepository commentRepository;
+    private readonly ManageUsersView manageUsers;
+    private readonly ManagePostsView managePosts;
+    private readonly ManageCommentsView manageComments;
 
     public CliApp(IUserRepository userRepository, ICommentRepository commentRepository, IPostRepository postRepository)
     {
-        this.userRepository = userRepository;
-        this.commentRepository = commentRepository;
-        this.postRepository = postRepository;
+        var createUser = new CreateUserView(userRepository);
+        var userList = new ListUsersView(userRepository);
+        var singleUser = new SingleUserView(userRepository);
+
+        this.manageUsers = new ManageUsersView(createUser, userList, singleUser);
+
+        var createPost = new CreatePostView(postRepository);
+        var postList = new ListPostsView(postRepository);
+        var singlePost = new SinglePostView(postRepository);
+
+        this.managePosts = new ManagePostsView(createPost, postList, singlePost);
+
+        var createComment = new CreateCommentView(commentRepository);
+        var commentList = new ListCommentsView(commentRepository);
+        var singleComment = new SingleCommentView(commentRepository);
+
+        this.manageComments = new ManageCommentsView(createComment, commentList, singleComment);
     }
 
     public async Task StartAsync()
@@ -32,22 +49,22 @@ public class CliApp
             switch (choice)
             {
                 case "1":
-                    await CreateUserAsync();
+                    await manageUsers.CreateUserAsync();
                     break;
 
                 case "2":
-                    await CreatePostAsync();
+                    await managePosts.CreatePostAsync();
                     break;
                 case "3":
-                    await AddCommentAsync();
+                    await manageComments.CreateCommentAsync();
                     break;
 
                 case "4":
-                    await ListPostsAsync();
+                    await managePosts.PostListAsync();
                     break;
 
                 case "5":
-                    await SinglePostAsync();
+                    await managePosts.SinglePostAsync();
                     break;
 
                 case "0":
@@ -57,36 +74,4 @@ public class CliApp
 
         }
     }
-
-
-    public async Task CreateUserAsync()
-    {
-        Console.WriteLine("user created");
-        await Task.CompletedTask;
-    }
-
-    public async Task CreatePostAsync()
-    {
-        Console.WriteLine("post created");
-        await Task.CompletedTask;
-
-    }
-
-    public async Task AddCommentAsync()
-    {
-        Console.WriteLine("comment added");
-        await Task.CompletedTask;
-    }
-    public async Task ListPostsAsync()
-    {
-        Console.WriteLine("all posts are here");
-        await Task.CompletedTask;
-    }
-    public async Task SinglePostAsync()
-    {
-        Console.WriteLine("single post is here");
-        await Task.CompletedTask;
-    }
-
-
 }
