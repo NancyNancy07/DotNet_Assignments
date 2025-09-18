@@ -21,7 +21,7 @@ public class CliApp
 
         var createPost = new CreatePostView(postRepository);
         var postList = new ListPostsView(postRepository);
-        var singlePost = new SinglePostView(postRepository);
+        var singlePost = new SinglePostView(postRepository,commentRepository);
 
         this.managePosts = new ManagePostsView(createPost, postList, singlePost);
 
