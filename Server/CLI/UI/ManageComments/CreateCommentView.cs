@@ -31,6 +31,7 @@ public class CreateCommentView
         var newComment = new Comment();
         newComment.Postid = postId;
         newComment.Userid = userId;
+        newComment.Body = comment;
         await commentRepository.AddAsync(newComment);
 
         Console.WriteLine($"Comment: {comment} is added on post {postId} by user {userId}");

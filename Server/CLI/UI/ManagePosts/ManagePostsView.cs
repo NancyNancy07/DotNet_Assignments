@@ -20,9 +20,9 @@ public class ManagePostsView
         await createPost.ShowAsync();
     }
 
-    async public Task PostListAsync()
+     public void PostList()
     {
-        await listPosts.ShowAsync();
+     listPosts.ShowList();
     }
 
     async public Task SinglePostAsync()

@@ -1,5 +1,5 @@
 using RepositoryContracts;
-
+using Entities;
 namespace CLI.UI.ManagePosts;
 
 public class ListPostsView
@@ -11,10 +11,13 @@ public class ListPostsView
         this.postRepository = postRepository;
     }
 
-    public async Task ShowAsync()
+    public void ShowList()
     {
-        Console.WriteLine("All posts are here");
-        await Task.CompletedTask;
+        IQueryable<Post> result = postRepository.GetMany();
 
+        foreach (var post in result)
+        {
+            Console.WriteLine($"Post: \nPostId: {post.PostId}, Post Title: {post.Title}");
+        }
     }
 }

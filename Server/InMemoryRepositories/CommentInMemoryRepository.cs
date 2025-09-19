@@ -6,19 +6,19 @@ namespace InMemoryRepositories;
 
 public class CommentInMemoryRepository : ICommentRepository
 {
-       private List<Comment> comments = new List<Comment>();
+    private List<Comment> comments = new List<Comment>();
     public Task<Comment> AddAsync(Comment comment)
     {
-         comment.CommentId = comments.Any()
-      ? comments.Max(c => c.CommentId) + 1
-      : 1;
+        comment.CommentId = comments.Any()
+     ? comments.Max(c => c.CommentId) + 1
+     : 1;
         comments.Add(comment);
         return Task.FromResult(comment);
     }
 
     public Task DeleteAsync(int id)
     {
-         Comment? commentToRemove = comments.SingleOrDefault(c => c.CommentId == id);
+        Comment? commentToRemove = comments.SingleOrDefault(c => c.CommentId == id);
         if (commentToRemove is null)
         {
             throw new InvalidOperationException(
@@ -28,14 +28,14 @@ public class CommentInMemoryRepository : ICommentRepository
         return Task.CompletedTask;
     }
 
-    public IQueryable<Comment> GetManyAsync()
+    public IQueryable<Comment> GetMany()
     {
-           return comments.AsQueryable();
+        return comments.AsQueryable();
     }
 
     public Task<Comment> GetSingleAsync(int id)
     {
-         Comment? comment = comments.SingleOrDefault(c => c.CommentId == id);
+        Comment? comment = comments.SingleOrDefault(c => c.CommentId == id);
         if (comment is null)
         {
             throw new InvalidOperationException(
@@ -46,7 +46,7 @@ public class CommentInMemoryRepository : ICommentRepository
 
     public Task UpdateAsync(Comment comment)
     {
-         Comment? existingComment = comments.SingleOrDefault(c => c.CommentId == comment.CommentId);
+        Comment? existingComment = comments.SingleOrDefault(c => c.CommentId == comment.CommentId);
         if (existingComment is null)
         {
             throw new InvalidOperationException(

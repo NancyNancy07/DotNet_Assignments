@@ -1,5 +1,5 @@
 using RepositoryContracts;
-
+using Entities;
 namespace CLI.UI.ManagePosts;
 
 public class SinglePostView
@@ -22,8 +22,15 @@ public class SinglePostView
         int postId = int.Parse(id!);
 
         var post = await postRepository.GetSingleAsync(postId);
-        var comment = await commentRepository.GetSingleAsync(postId);
+        IQueryable<Comment> commentList = commentRepository.GetMany();
 
-        Console.WriteLine($"Post: title: {post.Title} body: {post.Body} comment: {comment.Body}");
+        foreach (var comment in commentList)
+        {
+            if (postId == comment.Postid)
+            {
+                Console.WriteLine($"Post: title: {post.Title} body: {post.Body} comment: {comment.Body}");
+            }
+        }
+
     }
 }

@@ -11,9 +11,8 @@ public class ListCommentsView
         this.commentRepository = commentRepository;
     }
 
-    public async Task ShowAsync()
+    public void ShowList()
     {
         Console.WriteLine("All comments are here");
-        await Task.CompletedTask;
     }
 }

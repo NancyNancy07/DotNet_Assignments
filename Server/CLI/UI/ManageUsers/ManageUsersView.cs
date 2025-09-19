@@ -18,9 +18,9 @@ public class ManageUsersView
         await createUser.ShowAsync();
     }
 
-    async public Task UserListAsync()
+     public void UserList()
     {
-        await listUsers.ShowAsync();
+         listUsers.ShowList();
     }
 
     async public Task SingleUserAsync()

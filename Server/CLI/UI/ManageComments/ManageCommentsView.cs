@@ -4,13 +4,13 @@ namespace CLI.UI.ManageComments;
 
 public class ManageCommentsView
 {
-  private readonly CreateCommentView createComment;
+    private readonly CreateCommentView createComment;
     private readonly ListCommentsView listComments;
     private readonly SingleCommentView singleComment;
 
     public ManageCommentsView(CreateCommentView createComment, ListCommentsView listComments, SingleCommentView singleComment)
     {
-        this.createComment= createComment;
+        this.createComment = createComment;
         this.listComments = listComments;
         this.singleComment = singleComment;
     }
@@ -20,9 +20,9 @@ public class ManageCommentsView
         await createComment.ShowAsync();
     }
 
-    async public Task CommentListAsync()
+    public void CommentList()
     {
-        await listComments.ShowAsync();
+        listComments.ShowList();
     }
 
     async public Task SingleCommentAsync()

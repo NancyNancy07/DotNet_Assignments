@@ -60,7 +60,7 @@ public class CliApp
                     break;
 
                 case "4":
-                    await managePosts.PostListAsync();
+                     managePosts.PostList();
                     break;
 
                 case "5":

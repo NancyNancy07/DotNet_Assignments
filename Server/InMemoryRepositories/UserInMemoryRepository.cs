@@ -6,7 +6,7 @@ namespace InMemoryRepositories;
 
 public class UserInMemoryRepository : IUserRepository
 {
-      private List<User> users = new List<User>();
+    private List<User> users = new List<User>();
     public Task<User> AddAsync(User user)
     {
         user.UserId = users.Any()
@@ -28,14 +28,14 @@ public class UserInMemoryRepository : IUserRepository
         return Task.CompletedTask;
     }
 
-    public IQueryable<User> GetManyAsync()
+    public IQueryable<User> GetMany()
     {
-          return users.AsQueryable();
+        return users.AsQueryable();
     }
 
     public Task<User> GetSingleAsync(int id)
     {
-            User? user = users.SingleOrDefault(u => u.UserId == id);
+        User? user = users.SingleOrDefault(u => u.UserId == id);
         if (user is null)
         {
             throw new InvalidOperationException(
@@ -46,7 +46,7 @@ public class UserInMemoryRepository : IUserRepository
 
     public Task UpdateAsync(User user)
     {
-       User? existingUser = users.SingleOrDefault(u =>u.UserId == user.UserId);
+        User? existingUser = users.SingleOrDefault(u => u.UserId == user.UserId);
         if (existingUser is null)
         {
             throw new InvalidOperationException(
