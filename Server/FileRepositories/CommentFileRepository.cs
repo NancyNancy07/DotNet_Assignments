@@ -10,7 +10,7 @@ public class CommentFileRepository : ICommentRepository
 
     public CommentFileRepository()
     {
-        if (File.Exists(filePath))
+        if (!File.Exists(filePath) || new FileInfo(filePath).Length == 0)
         {
             File.WriteAllText(filePath, "[]");
         }

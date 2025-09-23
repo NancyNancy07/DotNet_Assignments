@@ -11,9 +11,9 @@ public class PostFileRepository : IPostRepository
 
     public PostFileRepository()
     {
-        if (!File.Exists(filePath))
+        if (!File.Exists(filePath) || new FileInfo(filePath).Length == 0)
         {
-            File.WriteAllText(filePath, []);
+            File.WriteAllText(filePath, "[]");
         }
     }
     public async Task<Post> AddAsync(Post post)

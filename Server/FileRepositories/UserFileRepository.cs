@@ -11,9 +11,9 @@ public class UserFileRepository : IUserRepository
 
     public UserFileRepository()
     {
-        if (!File.Exists(filePath))
+        if (!File.Exists(filePath) || new FileInfo(filePath).Length == 0)
         {
-            File.WriteAllText(filePath, []);
+            File.WriteAllText(filePath, "[]");
         }
     }
     public async Task<User> AddAsync(User user)
