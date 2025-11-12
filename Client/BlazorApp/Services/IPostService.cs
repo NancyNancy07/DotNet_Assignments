@@ -4,5 +4,7 @@ namespace BlazorApp.Services;
 
 public interface IPostService
 {
- public Task<PostDTO> AddUserAsync(CreatePostDTO request); 
+    Task<IEnumerable<PostDTO>> GetAllAsync();
+    Task<PostDTO> GetByIdAsync(int id);
+    public Task<PostDTO> AddPostAsync(CreatePostDTO request);
 }

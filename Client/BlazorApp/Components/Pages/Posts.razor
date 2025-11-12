@@ -1,0 +1,54 @@
+@page "/posts"
+@rendermode InteractiveServer
+@using DTOs
+@using BlazorApp.Services
+@inject IPostService PostService
+@inject NavigationManager NavManager
+
+<h3 class="mb-3 text-primary">Posts</h3>
+
+@if (posts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var post in posts)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>@post.Title</span>
+                <button class="btn btn-link" @onclick="() => OpenDetails(post.Id)">View</button>
+            </li>
+        }
+    </ul>
+}
+
+<div class="mt-4 card p-3">
+    <h5>Create a Post</h5>
+    <input class="form-control mb-2" placeholder="Title" @bind="newPost.Title" />
+    <textarea class="form-control mb-2" placeholder="Body" @bind="newPost.Body"></textarea>
+    <button class="btn btn-success" @onclick="CreatePost">Add Post</button>
+</div>
+
+@code {
+    private IEnumerable<PostDTO>? posts;
+    private CreatePostDTO newPost = new() { Title = "", Body = "", UserId = 1 };
+
+    protected override async Task OnInitializedAsync()
+    {
+        posts = await PostService.GetAllAsync();
+    }
+
+    private async Task CreatePost()
+    {
+        await PostService.AddPostAsync(newPost);
+        posts = await PostService.GetAllAsync(); // refresh list
+        newPost = new() { Title = "", Body = "", UserId = 1 };
+    }
+
+    private void OpenDetails(int id)
+    {
+        NavManager.NavigateTo($"/posts/{id}");
+    }
+}

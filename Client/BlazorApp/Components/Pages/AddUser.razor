@@ -1,0 +1,51 @@
+﻿@page "/addUser"
+@rendermode InteractiveServer
+@using DTOs
+@using BlazorApp.Services
+@inject IUserService UserService
+
+<PageTitle>Add User</PageTitle>
+<h1>Add User</h1>
+
+<form>
+  
+    <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control" id="username" @bind="user.UserName" />
+    </div>
+
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" @bind="user.Password" />
+    </div>
+    
+  
+    <div class="d-flex justify-content-end"> 
+        <button type="button" class="btn btn-primary px-4" @onclick="AddNewUser">
+          <i class="bi bi-person-plus-fill me-1"></i> Add User
+        </button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(message))
+    {
+      <div class="alert alert-success mt-3">@message</div>
+    }
+    
+</form>
+
+
+@code {
+    private CreateUserDTO user = new CreateUserDTO { UserName = string.Empty, Password = string.Empty };
+    private string? message;
+
+    private async Task AddNewUser(){
+        try{
+        var created = await UserService.AddUserAsync(user);
+        message = $"User created: {created.Username}";
+        }
+         catch (Exception ex)
+        {
+            message = $"Error: {ex.Message}";
+        }
+    }
+}   

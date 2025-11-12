@@ -1,0 +1,59 @@
+@page "/posts/{PostId:int}"
+@rendermode InteractiveServer
+@using DTOs
+@using BlazorApp.Services
+@inject IPostService PostService
+@inject ICommentService CommentService
+
+<h3 class="text-primary">Post Details</h3>
+
+@if (post == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="card p-3 mb-4">
+        <h4>@post.Title</h4>
+        <p>@post.Body</p>
+        <small>By: @post.AuthorName</small>
+    </div>
+
+    <h5>Comments</h5>
+
+    @if (post.Comments?.Any() == true)
+    {
+        <ul class="list-group mb-3">
+            @foreach (var c in post.Comments)
+            {
+                <li class="list-group-item">@c.Body</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No comments yet.</p>
+    }
+
+    <textarea class="form-control mb-2" placeholder="Add a comment..." @bind="newComment.Body"></textarea>
+    <button class="btn btn-primary" @onclick="AddComment">Add Comment</button>
+}
+
+@code {
+    [Parameter] public int PostId { get; set; }
+    private PostDTO? post;
+    private CreateCommentDTO newComment = new() { Body = "", PostId = 0, UserId = 1 };
+
+    protected override async Task OnInitializedAsync()
+    {
+        post = await PostService.GetByIdAsync(PostId);
+        newComment.PostId = PostId;
+    }
+
+    private async Task AddComment()
+    {
+        await CommentService.AddCommentAsync(newComment);
+        post = await PostService.GetByIdAsync(PostId); // reload post with new comment
+        newComment.Body = "";
+    }
+}
