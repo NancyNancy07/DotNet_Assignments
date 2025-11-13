@@ -4,3 +4,44 @@
 @using BlazorApp.Services
 @inject ICommentService CommentService
 
+<form>
+    <div class="mb-3">
+      <textarea class="form-control" placeholder="Write a comment..." @bind="newComment"></textarea>
+    </div>
+
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" @onclick="SubmitComment">Add Comment</button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert alert-success mt-2">@message</div>
+    }
+</form>
+
+@code {
+    [Parameter] public int PostId { get; set; }
+    [Parameter] public EventCallback<CommentDTO> OnCommentAdded { get; set; }
+
+    private CreateCommentDTO newComment = new CreateCommentDTO { Body = "", PostId= 0, UserId = 1 }; // hardcoded for now
+    private string? message;
+
+    private async Task SubmitComment()
+    {
+        try
+        {
+            var created = await CommentService.AddCommentAsync(PostId, newComment);
+            message = $"Comment added!";
+
+            // Clear the input
+            newComment.Body = string.Empty;
+
+            // Notify parent page to refresh comment list
+            await OnCommentAdded.InvokeAsync(created);
+        }
+        catch (Exception ex)
+        {
+            message = $"Error: {ex.Message}";
+        }
+    }
+}

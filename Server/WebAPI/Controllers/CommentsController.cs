@@ -38,6 +38,7 @@ namespace WebAPI.Controllers
                 Id = created.CommentId,
                 Body = created.Body ?? string.Empty,
                 UserName = user?.Username ?? string.Empty,
+                UserId = created.Userid,
                 PostId = created.Postid
             };
 
@@ -59,6 +60,7 @@ namespace WebAPI.Controllers
                 Id = comment.CommentId,
                 Body = comment.Body ?? string.Empty,
                 UserName = user?.Username ?? string.Empty,
+                UserId = comment.Userid,
                 PostId = comment.Postid
             };
 
@@ -86,6 +88,7 @@ namespace WebAPI.Controllers
                     Id = comment.CommentId,
                     Body = comment.Body ?? string.Empty,
                     UserName = user?.Username ?? string.Empty,
+                    UserId = comment.Userid,
                     PostId = comment.Postid
                 });
             }
@@ -114,6 +117,7 @@ namespace WebAPI.Controllers
                 Id = existingComment.CommentId,
                 Body = existingComment.Body ?? string.Empty,
                 UserName = user?.Username ?? string.Empty,
+                UserId = existingComment.Userid,
                 PostId = existingComment.Postid
             };
 
@@ -137,6 +141,7 @@ namespace WebAPI.Controllers
                 Id = existingComment.CommentId,
                 Body = existingComment.Body ?? string.Empty,
                 UserName = user?.Username ?? string.Empty,
+                UserId = existingComment.Userid,
                 PostId = existingComment.Postid
             };
 

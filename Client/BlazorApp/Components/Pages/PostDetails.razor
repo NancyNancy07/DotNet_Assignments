@@ -16,7 +16,6 @@ else
     <div class="card p-3 mb-4">
         <h4>@post.Title</h4>
         <p>@post.Body</p>
-        <small>By: @post.AuthorName</small>
     </div>
 
     <h5>Comments</h5>
@@ -50,10 +49,23 @@ else
         newComment.PostId = PostId;
     }
 
-    private async Task AddComment()
+   private async Task AddComment()
+{
+    newComment.PostId = PostId;
+
+    // Add the new comment
+    await CommentService.AddCommentAsync(PostId, newComment);
+
+    // Update UI immediately by adding the new comment to the current list
+    post?.Comments?.Add(new CommentDTO
     {
-        await CommentService.AddCommentAsync(newComment);
-        post = await PostService.GetByIdAsync(PostId); // reload post with new comment
-        newComment.Body = "";
-    }
+        Body = newComment.Body,
+        PostId = PostId,
+        UserId = newComment.UserId
+    });
+
+    newComment.Body = "";
+    StateHasChanged(); // force Blazor to refresh UI
+}
+
 }

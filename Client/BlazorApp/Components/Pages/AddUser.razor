@@ -29,6 +29,7 @@
     @if (!string.IsNullOrEmpty(message))
     {
       <div class="alert alert-success mt-3">@message</div>
+
     }
     
 </form>
@@ -42,6 +43,8 @@
         try{
         var created = await UserService.AddUserAsync(user);
         message = $"User created: {created.Username}";
+
+        user = new CreateUserDTO { UserName = string.Empty, Password = string.Empty };
         }
          catch (Exception ex)
         {

@@ -12,7 +12,8 @@ public class HttpCommentService : ICommentService
     {
         this.client = client;
     }
-    async Task<CommentDTO> ICommentService.AddCommentAsync(CreateCommentDTO request)
+
+    async Task<CommentDTO> ICommentService.AddCommentAsync(int id, CreateCommentDTO request)
     {
         HttpResponseMessage httpResponse = await client.PostAsJsonAsync("comments", request);
         string response = await httpResponse.Content.ReadAsStringAsync();

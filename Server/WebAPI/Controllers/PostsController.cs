@@ -10,10 +10,12 @@ namespace WebAPI.Controllers
     public class PostsController : ControllerBase
     {
         private readonly IPostRepository postRepo;
+        private readonly ICommentRepository commentRepo;
 
-        public PostsController(IPostRepository postRepo)
+        public PostsController(IPostRepository postRepo, ICommentRepository commentRepo)
         {
             this.postRepo = postRepo;
+            this.commentRepo = commentRepo;
         }
 
         // Create new post
@@ -43,13 +45,26 @@ namespace WebAPI.Controllers
             if (post == null)
                 return NotFound();
 
+            // fetch comments for this post from comment repository
+            var comments = commentRepo.GetMany()
+                .Where(c => c.Postid == postId)
+                .Select(c => new CommentDTO
+                {
+                    UserId = c.Userid,
+                    Body = c.Body!,
+                    PostId = c.Postid,
+                    UserName = "Unknown"
+                })
+                .ToList();
+
             PostDTO dto = new()
             {
                 Id = post.PostId,
                 Title = post.Title ?? string.Empty,
                 Body = post.Body ?? string.Empty,
                 UserId = post.UserId,
-                AuthorName = "Unknown"
+                AuthorName = "Unknown",
+                Comments = comments
             };
 
             return Ok(dto);
