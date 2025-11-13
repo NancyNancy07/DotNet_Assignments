@@ -68,6 +68,18 @@ public class UserFileRepository : IUserRepository
 
     }
 
+    public async Task<User> GetSingleByUsernameAsync(string username)
+    {
+        var users = GetMany();
+        User? user = users.FirstOrDefault(u => string.Equals(u.Username, username, StringComparison.OrdinalIgnoreCase));
+        if (user is null)
+        {
+            throw new InvalidOperationException(
+               $"User with username '{username}' not found");
+        }
+        return user;
+    }
+
     public async Task UpdateAsync(User user)
     {
         string userAsJson = await File.ReadAllTextAsync(filePath);
