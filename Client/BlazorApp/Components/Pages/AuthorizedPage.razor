@@ -1,0 +1,29 @@
+
+@page "/AuthorizedPage"
+@using System.Security.Claims
+@attribute [Authorize]
+
+<AuthorizeView>
+    <Authorized>
+    <p>@context.User.Claims.First(claim => claim.Type.Equals(ClaimTypes.Role)).Value</p>
+
+    <p>
+    Your claims include:
+    <ol>
+        @foreach (Claim  claim in context.User.Claims)
+            {
+              <li>
+                 <label>@claim.Type: @claim.Value</label>
+             </li>
+            }
+    </ol>
+    
+    
+    </p>
+    </Authorized>
+
+    <NotAuthorized>
+    <p> You are not logged in... </p>
+    </NotAuthorized>
+</AuthorizeView>
+

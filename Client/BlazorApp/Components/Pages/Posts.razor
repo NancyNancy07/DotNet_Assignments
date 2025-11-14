@@ -1,9 +1,11 @@
 @page "/posts"
+@attribute [Authorize]
 @rendermode InteractiveServer
 @using DTOs
 @using BlazorApp.Services
 @inject IPostService PostService
 @inject NavigationManager NavManager
+@using Microsoft.AspNetCore.Components.Authorization
 
 <h3 class="mb-3 text-primary">Posts</h3>
 
@@ -17,8 +19,16 @@ else
         @foreach (var post in posts)
         {
             <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>@post.Title</span>
-                <button class="btn btn-link" @onclick="() => OpenDetails(post.Id)">View</button>
+                <span>
+                    <strong>@post.Title</strong>
+                </span>
+                <div>
+                    <button class="btn btn-link" @onclick="() => OpenDetails(post.Id)">View</button>
+                    @if (userId == post.UserId)
+                    {
+                        <button class="btn btn-warning btn-sm" @onclick="() => EditPost(post.Id)">Edit</button>
+                    }
+                </div>
             </li>
         }
     </ul>
@@ -26,29 +36,62 @@ else
 
 <div class="mt-4 card p-3">
     <h5>Create a Post</h5>
-    <input class="form-control mb-2" placeholder="Title" @bind="newPost.Title" />
-    <textarea class="form-control mb-2" placeholder="Body" @bind="newPost.Body"></textarea>
-    <button class="btn btn-success" @onclick="CreatePost">Add Post</button>
+
+    <AuthorizeView>
+        <Authorized>
+            <input class="form-control mb-2" placeholder="Title" @bind="newPost.Title" />
+            <textarea class="form-control mb-2" placeholder="Body" @bind="newPost.Body"></textarea>
+            <button class="btn btn-success" @onclick="CreatePost">Add Post</button>
+        </Authorized>
+        <NotAuthorized>
+            <p>You must log in to create a post.</p>
+        </NotAuthorized>
+    </AuthorizeView>
 </div>
 
 @code {
+    [CascadingParameter]
+    public Task<AuthenticationState>? State { get; set; }
+
     private IEnumerable<PostDTO>? posts;
-    private CreatePostDTO newPost = new() { Title = "", Body = "", UserId = 1 };
+    private CreatePostDTO newPost = new() { Title = "", Body = "" };
+
+    private int? userId;
+    private string? userName;
 
     protected override async Task OnInitializedAsync()
     {
+        // Load posts
         posts = await PostService.GetAllAsync();
+
+        if (State != null)
+        {
+            var authState = await State;
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated == true)
+            {
+                userName = user.Identity.Name;
+                userId = int.Parse(user.Claims.Single(c => c.Type == "Id").Value);
+            }
+        }
     }
 
     private async Task CreatePost()
     {
+        if (userId == null) return;
+
+        newPost.UserId = userId.Value;
+
         await PostService.AddPostAsync(newPost);
-        posts = await PostService.GetAllAsync(); // refresh list
-        newPost = new() { Title = "", Body = "", UserId = 1 };
+
+        // Refresh posts
+        posts = await PostService.GetAllAsync();
+
+        // Clear inputs
+        newPost = new() { Title = "", Body = "" };
     }
 
-    private void OpenDetails(int id)
-    {
-        NavManager.NavigateTo($"/posts/{id}");
-    }
+    private void OpenDetails(int id) => NavManager.NavigateTo($"/posts/{id}");
+    private void EditPost(int id) => NavManager.NavigateTo($"/posts/edit/{id}");
 }
