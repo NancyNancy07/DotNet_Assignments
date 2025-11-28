@@ -4,6 +4,7 @@ namespace Entities;
 
 public class Post
 {
+    private Post() { }
     public Post(string title, string body, int userId)
     {
         Title = title;
@@ -16,5 +17,7 @@ public class Post
     public string? Body { get; set; }
     public int UserId { get; set; }
 
+    public List<Comment> Comments { get; set; }
+    public User User { get; set; }
 
 }

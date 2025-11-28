@@ -47,12 +47,12 @@ namespace WebAPI.Controllers
 
             // fetch comments for this post from comment repository
             var comments = commentRepo.GetMany()
-                .Where(c => c.Postid == postId)
+                .Where(c => c.PostId == postId)
                 .Select(c => new CommentDTO
                 {
-                    UserId = c.Userid,
+                    UserId = c.UserId,
                     Body = c.Body!,
-                    PostId = c.Postid,
+                    PostId = c.PostId,
                     UserName = "Unknown"
                 })
                 .ToList();

@@ -25,21 +25,21 @@ namespace WebAPI.Controllers
             Comment comment = new()
             {
                 Body = request.Body,
-                Userid = request.UserId,
-                Postid = request.PostId
+                UserId = request.UserId,
+                PostId = request.PostId
             };
             Comment created = await commentRepo.AddAsync(comment);
 
             // Get username for DTO
-            var user = await userRepo.GetSingleAsync(created.Userid);
+            var user = await userRepo.GetSingleAsync(created.UserId);
 
             CommentDTO dto = new()
             {
                 Id = created.CommentId,
                 Body = created.Body ?? string.Empty,
                 UserName = user?.Username ?? string.Empty,
-                UserId = created.Userid,
-                PostId = created.Postid
+                UserId = created.UserId,
+                PostId = created.PostId
             };
 
             return Created($"/comments/{dto.Id}", dto);
@@ -53,15 +53,15 @@ namespace WebAPI.Controllers
             if (comment == null)
                 return NotFound();
 
-            var user = await userRepo.GetSingleAsync(comment.Userid);
+            var user = await userRepo.GetSingleAsync(comment.UserId);
 
             CommentDTO dto = new()
             {
                 Id = comment.CommentId,
                 Body = comment.Body ?? string.Empty,
                 UserName = user?.Username ?? string.Empty,
-                UserId = comment.Userid,
-                PostId = comment.Postid
+                UserId = comment.UserId,
+                PostId = comment.PostId
             };
 
             return Ok(dto);
@@ -74,22 +74,22 @@ namespace WebAPI.Controllers
             IQueryable<Comment> comments = commentRepo.GetMany();
 
             if (postId.HasValue)
-                comments = comments.Where(c => c.Postid == postId.Value);
+                comments = comments.Where(c => c.PostId == postId.Value);
 
             if (userId.HasValue)
-                comments = comments.Where(c => c.Userid == userId.Value);
+                comments = comments.Where(c => c.UserId == userId.Value);
 
             List<CommentDTO> dtos = new();
             foreach (var comment in comments)
             {
-                var user = await userRepo.GetSingleAsync(comment.Userid);
+                var user = await userRepo.GetSingleAsync(comment.UserId);
                 dtos.Add(new CommentDTO
                 {
                     Id = comment.CommentId,
                     Body = comment.Body ?? string.Empty,
                     UserName = user?.Username ?? string.Empty,
-                    UserId = comment.Userid,
-                    PostId = comment.Postid
+                    UserId = comment.UserId,
+                    PostId = comment.PostId
                 });
             }
 
@@ -105,20 +105,20 @@ namespace WebAPI.Controllers
                 return NotFound();
 
             existingComment.Body = request.Body;
-            existingComment.Userid = request.UserId;
-            existingComment.Postid = request.PostId;
+            existingComment.UserId = request.UserId;
+            existingComment.PostId = request.PostId;
 
             await commentRepo.UpdateAsync(existingComment);
 
-            var user = await userRepo.GetSingleAsync(existingComment.Userid);
+            var user = await userRepo.GetSingleAsync(existingComment.UserId);
 
             CommentDTO dto = new()
             {
                 Id = existingComment.CommentId,
                 Body = existingComment.Body ?? string.Empty,
                 UserName = user?.Username ?? string.Empty,
-                UserId = existingComment.Userid,
-                PostId = existingComment.Postid
+                UserId = existingComment.UserId,
+                PostId = existingComment.PostId
             };
 
             return Ok(dto);
@@ -134,15 +134,15 @@ namespace WebAPI.Controllers
 
             await commentRepo.DeleteAsync(commentId);
 
-            var user = await userRepo.GetSingleAsync(existingComment.Userid);
+            var user = await userRepo.GetSingleAsync(existingComment.UserId);
 
             CommentDTO dto = new()
             {
                 Id = existingComment.CommentId,
                 Body = existingComment.Body ?? string.Empty,
                 UserName = user?.Username ?? string.Empty,
-                UserId = existingComment.Userid,
-                PostId = existingComment.Postid
+                UserId = existingComment.UserId,
+                PostId = existingComment.PostId
             };
 
             return Ok(dto);
