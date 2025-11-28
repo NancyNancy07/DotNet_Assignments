@@ -15,9 +15,9 @@ public User(string username, string password)
     public string? Username { get; set; }
     public string? Password { get; set; }
 
-    public List<Post> Posts { get; set; }
+    public List<Post> Posts { get; set; } = new ();
 
-    public List<Comment> Comments { get; set; }
+    public List<Comment> Comments { get; set; } = new ();
 
 
 }
